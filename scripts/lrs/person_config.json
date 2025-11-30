@@ -3,12 +3,19 @@
         "unet_lr": 0.001280064,
         "text_encoder_lr": 0.0001280064,
         "train_batch_size": 4,
-        "gradient_accumulation_steps" : 4,
-        "min_snr_gamma" : 7,
+        "gradient_accumulation_steps" : 1,
+        "min_snr_gamma" : 5,
         "max_train_epochs": 25,
         "network_dim": 32,
         "network_alpha": 32,
-        "network_args": ["conv_dim=4", "conv_alpha=4", "dropout=null"]
+        "network_args": ["conv_dim=4", "conv_alpha=4", "dropout=null"],
+        "max_grad_norm" : 1,
+        "prior_loss_weight": 1,
+        "save_every_n_epochs": 1,
+        "optimizer_type" : "prodigy",
+        "optimizer_args" : ["decouple=True", "d_coef=1", "weight_decay=0.01", "use_bias_correction=True", "safeguard_warmup=True"]
+
+        
     },
     "data": {
         "eb324bfcad14e8f1d46346f46ae7af7d3e58c3babbc1f699ee7c61baab291369": {
