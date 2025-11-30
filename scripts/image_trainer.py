@@ -131,6 +131,8 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
                 config['prior_loss_weight'] = lrs_settings.get('prior_loss_weight')
             if lrs_settings.get('save_every_n_epochs') is not None:
                 config['save_every_n_epochs'] = lrs_settings.get('save_every_n_epochs')
+            if lrs_settings.get('lr_scheduler') is not None:
+                config['lr_scheduler'] = lrs_settings.get('lr_scheduler')
 
             for optional_key in [
                 "train_batch_size",
