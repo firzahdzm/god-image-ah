@@ -11,7 +11,7 @@ DATASET_ZIP="https://gradients.s3.eu-north-1.amazonaws.com/a40525e229c5e0ee_trai
 MODEL_TYPE="sdxl"
 
 # Optional: Repository name for the trained model
-EXPECTED_REPO_NAME="2cc97051-f1c3-4ce7-a1d3-d3f746ddff99"
+EXPECTED_REPO_NAME="2cc97051-f1c3-4ce7-a1d3-d3f746ddff991"
 
 # For uploading the outputs
 HUGGINGFACE_TOKEN="Your Huggingface Token"
