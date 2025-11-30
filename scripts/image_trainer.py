@@ -92,66 +92,6 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
     with open(config_template_path, "r") as file:
         config = toml.load(file)
 
-    lrs_config = load_lrs_config(model_type, is_style)
-    if lrs_config:
-        model_hash = hash_model(model_name)
-        lrs_settings = get_config_for_model(lrs_config, model_hash)
-
-        if lrs_settings:
-
-            if lrs_settings.get('unet_lr') is not None:
-                config['unet_lr'] = lrs_settings.get('unet_lr')
-            if lrs_settings.get('text_encoder_lr') is not None:
-                config['text_encoder_lr'] = lrs_settings.get('text_encoder_lr')
-            if lrs_settings.get('train_batch_size') is not None:
-                config['train_batch_size'] = lrs_settings.get('train_batch_size')
-            if lrs_settings.get('gradient_accumulation_steps') is not None:
-                config['gradient_accumulation_steps'] = lrs_settings.get('gradient_accumulation_steps')
-            if lrs_settings.get('min_snr_gamma') is not None:
-                config['min_snr_gamma'] = lrs_settings.get('min_snr_gamma')
-            if lrs_settings.get('lr_warmup_steps') is not None:
-                config['lr_warmup_steps'] = lrs_settings.get('lr_warmup_steps')
-            if lrs_settings.get('max_grad_norm') is not None:
-                config['max_grad_norm'] = lrs_settings.get('max_grad_norm')
-            if lrs_settings.get('max_train_epochs') is not None:
-                config['max_train_epochs'] = lrs_settings.get('max_train_epochs')
-            if lrs_settings.get('max_train_steps') is not None:
-                config['max_train_steps'] = lrs_settings.get('max_train_steps')
-            if lrs_settings.get('network_alpha') is not None:
-                config['network_alpha'] = lrs_settings.get('network_alpha')
-            if lrs_settings.get('network_dim') is not None:
-                config['network_dim'] = lrs_settings.get('network_dim')
-            if lrs_settings.get('network_args') is not None:
-                config['network_args'] = lrs_settings.get('network_args')
-            if lrs_settings.get('optimizer_type') is not None:
-                config['optimizer_type'] = lrs_settings.get('optimizer_type')
-            if lrs_settings.get('optimizer_args') is not None:
-                config['optimizer_args'] = lrs_settings.get('optimizer_args')
-            if lrs_settings.get('prior_loss_weight') is not None:
-                config['prior_loss_weight'] = lrs_settings.get('prior_loss_weight')
-            if lrs_settings.get('save_every_n_epochs') is not None:
-                config['save_every_n_epochs'] = lrs_settings.get('save_every_n_epochs')
-            if lrs_settings.get('lr_scheduler') is not None:
-                config['lr_scheduler'] = lrs_settings.get('lr_scheduler')
-
-            for optional_key in [
-                "train_batch_size",
-                "max_data_loader_n_workers",
-                "optimizer_args",
-                "min_snr_gamma",
-                "prior_loss_weight",
-                "max_grad_norm",
-                "network_alpha",
-                "network_dim",
-                "network_args",
-            ]:
-                if optional_key in lrs_settings:
-                    config[optional_key] = lrs_settings[optional_key]
-        else:
-            print(f"Warning: No LRS configuration found for model '{model_name}'", flush=True)
-    else:
-        print("Warning: Could not load LRS configuration, using default values", flush=True)
-
     # Update config
     network_config_person = {
         "stabilityai/stable-diffusion-xl-base-1.0": 235,
@@ -249,13 +189,6 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
         },
     }
 
-    config["pretrained_model_name_or_path"] = model_path
-    config["train_data_dir"] = train_data_dir
-    output_dir = train_paths.get_checkpoints_output_path(task_id, expected_repo_name)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir, exist_ok=True)
-    config["output_dir"] = output_dir
-
     if model_type == "sdxl":
         if is_style:
             network_config = config_mapping[network_config_style[model_name]]
@@ -265,6 +198,76 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
         config["network_dim"] = network_config["network_dim"]
         config["network_alpha"] = network_config["network_alpha"]
         config["network_args"] = network_config["network_args"]
+
+    lrs_config = load_lrs_config(model_type, is_style)
+    if lrs_config:
+        model_hash = hash_model(model_name)
+        lrs_settings = get_config_for_model(lrs_config, model_hash)
+
+        if lrs_settings:
+
+            if lrs_settings.get('unet_lr') is not None:
+                config['unet_lr'] = lrs_settings.get('unet_lr')
+            if lrs_settings.get('text_encoder_lr') is not None:
+                config['text_encoder_lr'] = lrs_settings.get('text_encoder_lr')
+            if lrs_settings.get('train_batch_size') is not None:
+                config['train_batch_size'] = lrs_settings.get('train_batch_size')
+            if lrs_settings.get('gradient_accumulation_steps') is not None:
+                config['gradient_accumulation_steps'] = lrs_settings.get('gradient_accumulation_steps')
+            if lrs_settings.get('min_snr_gamma') is not None:
+                config['min_snr_gamma'] = lrs_settings.get('min_snr_gamma')
+            if lrs_settings.get('lr_warmup_steps') is not None:
+                config['lr_warmup_steps'] = lrs_settings.get('lr_warmup_steps')
+            if lrs_settings.get('max_grad_norm') is not None:
+                config['max_grad_norm'] = lrs_settings.get('max_grad_norm')
+            if lrs_settings.get('max_train_epochs') is not None:
+                config['max_train_epochs'] = lrs_settings.get('max_train_epochs')
+            if lrs_settings.get('max_train_steps') is not None:
+                config['max_train_steps'] = lrs_settings.get('max_train_steps')
+            if lrs_settings.get('network_alpha') is not None:
+                config['network_alpha'] = lrs_settings.get('network_alpha')
+            if lrs_settings.get('network_dim') is not None:
+                config['network_dim'] = lrs_settings.get('network_dim')
+            if lrs_settings.get('network_args') is not None:
+                config['network_args'] = lrs_settings.get('network_args')
+            if lrs_settings.get('optimizer_type') is not None:
+                config['optimizer_type'] = lrs_settings.get('optimizer_type')
+            if lrs_settings.get('optimizer_args') is not None:
+                config['optimizer_args'] = lrs_settings.get('optimizer_args')
+            if lrs_settings.get('prior_loss_weight') is not None:
+                config['prior_loss_weight'] = lrs_settings.get('prior_loss_weight')
+            if lrs_settings.get('save_every_n_epochs') is not None:
+                config['save_every_n_epochs'] = lrs_settings.get('save_every_n_epochs')
+            if lrs_settings.get('lr_scheduler') is not None:
+                config['lr_scheduler'] = lrs_settings.get('lr_scheduler')
+
+            for optional_key in [
+                "train_batch_size",
+                "max_data_loader_n_workers",
+                "optimizer_args",
+                "min_snr_gamma",
+                "prior_loss_weight",
+                "max_grad_norm",
+                "network_alpha",
+                "network_dim",
+                "network_args",
+            ]:
+                if optional_key in lrs_settings:
+                    config[optional_key] = lrs_settings[optional_key]
+        else:
+            print(f"Warning: No LRS configuration found for model '{model_name}'", flush=True)
+    else:
+        print("Warning: Could not load LRS configuration, using default values", flush=True)
+
+    # Update config
+
+
+    config["pretrained_model_name_or_path"] = model_path
+    config["train_data_dir"] = train_data_dir
+    output_dir = train_paths.get_checkpoints_output_path(task_id, expected_repo_name)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
+    config["output_dir"] = output_dir
 
 
     # Save config to file
