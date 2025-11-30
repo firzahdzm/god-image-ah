@@ -117,6 +117,20 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
                 config['max_train_epochs'] = lrs_settings.get('max_train_epochs')
             if lrs_settings.get('max_train_steps') is not None:
                 config['max_train_steps'] = lrs_settings.get('max_train_steps')
+            if lrs_settings.get('network_alpha') is not None:
+                config['network_alpha'] = lrs_settings.get('network_alpha')
+            if lrs_settings.get('network_dim') is not None:
+                config['network_dim'] = lrs_settings.get('network_dim')
+            if lrs_settings.get('network_args') is not None:
+                config['network_args'] = lrs_settings.get('network_args')
+            if lrs_settings.get('optimizer_type') is not None:
+                config['optimizer_type'] = lrs_settings.get('optimizer_type')
+            if lrs_settings.get('optimizer_args') is not None:
+                config['optimizer_args'] = lrs_settings.get('optimizer_args')
+            if lrs_settings.get('prior_loss_weight') is not None:
+                config['prior_loss_weight'] = lrs_settings.get('prior_loss_weight')
+            if lrs_settings.get('save_every_n_epochs') is not None:
+                config['save_every_n_epochs'] = lrs_settings.get('save_every_n_epochs')
 
             for optional_key in [
                 "train_batch_size",
