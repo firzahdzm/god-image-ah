@@ -202,14 +202,16 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
     lrs_config = load_lrs_config(model_type, is_style)
     if lrs_config:
         model_hash = hash_model(model_name)
+        print(f"Model: {model_name}, Hash: {model_hash}", flush=True)
         lrs_settings = get_config_for_model(lrs_config, model_hash)
 
         if lrs_settings:
+            print(f"Loaded LRS settings: {lrs_settings}", flush=True)
 
             if lrs_settings.get('unet_lr') is not None:
-                config['unet_lr'] = lrs_settings.get('unet_lr')
+                config['unet_lr'] = float(lrs_settings.get('unet_lr'))
             if lrs_settings.get('text_encoder_lr') is not None:
-                config['text_encoder_lr'] = lrs_settings.get('text_encoder_lr')
+                config['text_encoder_lr'] = float(lrs_settings.get('text_encoder_lr'))
             if lrs_settings.get('train_batch_size') is not None:
                 config['train_batch_size'] = lrs_settings.get('train_batch_size')
             if lrs_settings.get('gradient_accumulation_steps') is not None:
@@ -254,6 +256,8 @@ def create_config(task_id, model_path, model_name, model_type, expected_repo_nam
             ]:
                 if optional_key in lrs_settings:
                     config[optional_key] = lrs_settings[optional_key]
+            
+            print(f"Final Config LRs: unet_lr={config.get('unet_lr')}, text_encoder_lr={config.get('text_encoder_lr')}", flush=True)
         else:
             print(f"Warning: No LRS configuration found for model '{model_name}'", flush=True)
     else:
